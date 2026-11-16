@@ -29,7 +29,7 @@
             max-width: 550px;
             height: 80vh;
             max-height: 550px;
-            background-image: url('Logo1.jpg'); /* Nombre del archivo de tu logo */
+            background-image: url('Logo.jpg'); /* Nombre del archivo de tu logo */
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
@@ -172,15 +172,9 @@
             </div>
         </div>
 
-        <div class="form-row">
-            <div class="form-group">
-                <label for="kmSalida">Km de Salida:</label>
-                <input type="number" id="kmSalida" inputmode="numeric" min="0" step="1" required placeholder="0">
-            </div>
-            <div class="form-group">
-                <label for="kmLlegada">Km de Llegada:</label>
-                <input type="number" id="kmLlegada" inputmode="numeric" min="0" step="1" required placeholder="0">
-            </div>
+        <div class="form-group">
+            <label for="kmLlegada">Km de Llegada:</label>
+            <input type="number" id="kmLlegada" inputmode="numeric" min="0" step="1" required placeholder="0">
         </div>
 
         <div class="form-group">
@@ -196,7 +190,7 @@
             
             <div id="otroMotivoGroup">
                 <label for="otroMotivo">Especifique el motivo:</label>
-                <textarea id="otroMotivo" rows="2" placeholder="Detalle o descripción del servicio"></textarea>
+                <textarea id="otroMotivo" rows="2" placeholder="Tipo de servicio"></textarea>
             </div>
         </div>
 
@@ -209,8 +203,8 @@
     // Reemplazar con la URL desplegada de tu Google Apps Script
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwQU9H1RYiWdR9MjTJVvWUSEhY5rfEAb0_NthbjfDZ3WUYgKxacXXy7BS25JexfEDdk/exec';
 
-    // Filtrar en tiempo real para asegurar que solo se escriban dígitos en C.I. y Kilometrajes
-    const numericFields = ['ci', 'kmSalida', 'kmLlegada'];
+    // Filtrar en tiempo real para asegurar que solo se escriban dígitos en C.I. y Kilometraje
+    const numericFields = ['ci', 'kmLlegada'];
     numericFields.forEach(id => {
         const input = document.getElementById(id);
         input.addEventListener('input', function() {
@@ -239,13 +233,7 @@
     form.addEventListener('submit', e => {
         e.preventDefault();
 
-        const kmSalidaVal = parseInt(document.getElementById('kmSalida').value, 10);
         const kmLlegadaVal = parseInt(document.getElementById('kmLlegada').value, 10);
-
-        if (kmLlegadaVal < kmSalidaVal) {
-            alert('Error: El Km de Llegada no puede ser menor que el Km de Salida.');
-            return;
-        }
 
         // Si eligió "Otros", enviamos el texto manual; si eligió un código, enviamos el código
         const motivoFinal = motivoSelect.value === 'Otros' 
@@ -260,7 +248,7 @@
             ci: document.getElementById('ci').value.trim(),
             salida: document.getElementById('salida').value.trim(),
             destino: document.getElementById('destino').value.trim(),
-            kmSalida: kmSalidaVal,
+            kmSalida: "", // Se envía vacío para mantener intacta la estructura de la hoja
             kmLlegada: kmLlegadaVal,
             motivo: motivoFinal
         };
