@@ -29,7 +29,7 @@
             max-width: 550px;
             height: 80vh;
             max-height: 550px;
-            background-image: url('logo1.png'); /* Nombre del archivo de tu logo */
+            background-image: url('logo.png'); /* Nombre del archivo de tu logo */
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
@@ -41,7 +41,7 @@
             position: relative;
             z-index: 1;
             max-width: 650px;
-            background: rgba(255, 255, 255, 0.92); /* Ligeramente translúcido para dejar ver el logo */
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(2px);
             padding: 30px;
             border-radius: 12px;
@@ -98,6 +98,10 @@
         }
         .form-row .form-group {
             flex: 1;
+        }
+        #otroMotivoGroup {
+            display: none;
+            margin-top: 10px;
         }
         button {
             background-color: #2563eb;
@@ -180,8 +184,20 @@
         </div>
 
         <div class="form-group">
-            <label for="motivo">Motivo de Viaje:</label>
-            <textarea id="motivo" rows="2" required placeholder="Detalle o descripción del servicio"></textarea>
+            <label for="motivoSelect">Motivo de Viaje:</label>
+            <select id="motivoSelect" required>
+                <option value="" disabled selected>Seleccione el motivo</option>
+                <option value="10.40">10.40</option>
+                <option value="10.41">10.41</option>
+                <option value="10.43">10.43</option>
+                <option value="10.51">10.51</option>
+                <option value="Otros">Otros</option>
+            </select>
+            
+            <div id="otroMotivoGroup">
+                <label for="otroMotivo">Especifique el motivo:</label>
+                <textarea id="otroMotivo" rows="2" placeholder="Detalle o descripción del servicio"></textarea>
+            </div>
         </div>
 
         <button type="submit" id="submitBtn">Guardar Registro</button>
@@ -202,6 +218,23 @@
         });
     });
 
+    // Mostrar u ocultar el campo manual cuando se elige "Otros"
+    const motivoSelect = document.getElementById('motivoSelect');
+    const otroMotivoGroup = document.getElementById('otroMotivoGroup');
+    const otroMotivoInput = document.getElementById('otroMotivo');
+
+    motivoSelect.addEventListener('change', function() {
+        if (this.value === 'Otros') {
+            otroMotivoGroup.style.display = 'block';
+            otroMotivoInput.required = true;
+            otroMotivoInput.focus();
+        } else {
+            otroMotivoGroup.style.display = 'none';
+            otroMotivoInput.required = false;
+            otroMotivoInput.value = '';
+        }
+    });
+
     const form = document.getElementById('fuelForm');
     form.addEventListener('submit', e => {
         e.preventDefault();
@@ -214,6 +247,11 @@
             return;
         }
 
+        // Si eligió "Otros", enviamos el texto manual; si eligió un código, enviamos el código
+        const motivoFinal = motivoSelect.value === 'Otros' 
+            ? 'Otros: ' + otroMotivoInput.value.trim() 
+            : motivoSelect.value;
+
         document.getElementById('submitBtn').style.display = 'none';
         document.getElementById('loadingMsg').style.display = 'block';
 
@@ -224,7 +262,7 @@
             destino: document.getElementById('destino').value.trim(),
             kmSalida: kmSalidaVal,
             kmLlegada: kmLlegadaVal,
-            motivo: document.getElementById('motivo').value.trim()
+            motivo: motivoFinal
         };
 
         fetch(scriptURL, {
@@ -236,6 +274,8 @@
         .then(() => {
             alert('¡Registro guardado exitosamente!');
             form.reset();
+            otroMotivoGroup.style.display = 'none';
+            otroMotivoInput.required = false;
             document.getElementById('submitBtn').style.display = 'block';
             document.getElementById('loadingMsg').style.display = 'none';
         })
