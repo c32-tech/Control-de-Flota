@@ -12,57 +12,51 @@
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
+            background-color: #e0f2fe;
             color: #333;
             padding: 20px;
             position: relative;
             min-height: 100vh;
         }
-        /* Marca de agua / Logo de fondo */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80vw;
-            max-width: 550px;
-            height: 80vh;
-            max-height: 550px;
-            background-image: url('logo.png'); /* Nombre del archivo de tu logo */
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: contain;
-            opacity: 0.12; /* Transparencia suave para no tapar los textos */
-            z-index: 0;
-            pointer-events: none;
-        }
         .container {
             position: relative;
             z-index: 1;
             max-width: 650px;
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(2px);
+            background: rgba(240, 249, 255, 0.92); border: 1px solid #bae6fd;
+            backdrop-filter: blur(3px);
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 25px rgba(14, 116, 144, 0.15);
             margin: 20px auto;
         }
         .header {
-            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 16px;
             margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #e2e8f0;
+            border-bottom: 2px solid #bae6fd;
+        }
+        .header-logo {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+        .header-text {
+            text-align: left;
         }
         .header h2 {
             color: #1e293b;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
+            line-height: 1.2;
         }
         .header p {
-            color: #64748b;
+            color: #475569;
             font-size: 14px;
-            margin-top: 5px;
+            margin-top: 4px;
+            font-weight: 600;
         }
         .form-group {
             margin-bottom: 18px;
@@ -71,22 +65,22 @@
             display: block;
             font-weight: 600;
             margin-bottom: 6px;
-            color: #334155;
+            color: #1e293b;
             font-size: 14px;
         }
         input, select, textarea {
             width: 100%;
             padding: 12px;
-            border: 1px solid #cbd5e1;
+            border: 1px solid #93c5fd;
             border-radius: 6px;
             font-size: 14px;
             transition: border-color 0.2s, box-shadow 0.2s;
-            background-color: rgba(248, 250, 252, 0.9);
+            background-color: rgba(255, 255, 255, 0.95);
         }
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
             background-color: #ffffff;
         }
         input:invalid:not(:placeholder-shown), select:invalid:not(:focus), textarea:invalid:not(:placeholder-shown) {
@@ -131,6 +125,16 @@
                 flex-direction: column;
                 gap: 0;
             }
+            .header {
+                gap: 12px;
+            }
+            .header-logo {
+                width: 58px;
+                height: 58px;
+            }
+            .header h2 {
+                font-size: 19px;
+            }
         }
     </style>
 </head>
@@ -138,8 +142,11 @@
 
 <div class="container">
     <div class="header">
-        <h2>Control de Combustible y Movilidad</h2>
-        <p>Planilla K3 — Registro Operativo</p>
+        <img src="logo.png" alt="Escudo Tercera Compañía" class="header-logo">
+        <div class="header-text">
+            <h2>Control de Combustible y Movilidad</h2>
+            <p>Planilla K3 — Tercera Compañía</p>
+        </div>
     </div>
     
     <form id="fuelForm">
@@ -190,7 +197,7 @@
             
             <div id="otroMotivoGroup">
                 <label for="otroMotivo">Especifique el motivo:</label>
-                <textarea id="otroMotivo" rows="2" placeholder="Tipo de servicio"></textarea>
+                <textarea id="otroMotivo" rows="2" placeholder="Detalle o descripción del servicio"></textarea>
             </div>
         </div>
 
@@ -235,7 +242,6 @@
 
         const kmLlegadaVal = parseInt(document.getElementById('kmLlegada').value, 10);
 
-        // Si eligió "Otros", enviamos el texto manual; si eligió un código, enviamos el código
         const motivoFinal = motivoSelect.value === 'Otros' 
             ? 'Otros: ' + otroMotivoInput.value.trim() 
             : motivoSelect.value;
